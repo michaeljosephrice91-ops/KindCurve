@@ -4,11 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { RotateCcw } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import dynamic from "next/dynamic";
 import { useKindCurveStore } from "@/lib/store";
 import { PIE_COLORS } from "@/lib/constants";
 import { BackButton, TealButton, Card, PageShell } from "@/components/ui/shared";
-
+const PieChart = dynamic(() => import("recharts").then((m) => m.PieChart), { ssr: false });
+const Pie = dynamic(() => import("recharts").then((m) => m.Pie), { ssr: false });
+const Cell = dynamic(() => import("recharts").then((m) => m.Cell), { ssr: false });
+const ResponsiveContainer = dynamic(() => import("recharts").then((m) => m.ResponsiveContainer), { ssr: false });
 export default function PiePage() {
   const router = useRouter();
   const { charities, setCharities, initialCharities, monthlyGift } = useKindCurveStore();
