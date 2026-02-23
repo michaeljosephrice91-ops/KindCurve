@@ -1,45 +1,39 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
+import dynamic2 from "next/dynamic";
 import { RotateCcw } from "lucide-react";
 import { useKindCurveStore } from "@/lib/store";
 import { PIE_COLORS } from "@/lib/constants";
 import { BackButton, TealButton, Card, PageShell } from "@/components/ui/shared";
 
-const ResponsiveContainer = dynamic(
+const ResponsiveContainer = dynamic2(
   () => import("recharts").then((m) => m.ResponsiveContainer),
   { ssr: false }
 );
-const PieChart = dynamic(
+const PieChart = dynamic2(
   () => import("recharts").then((m) => m.PieChart),
   { ssr: false }
 );
-const Pie = dynamic(
+const Pie = dynamic2(
   () => import("recharts").then((m) => m.Pie),
   { ssr: false }
 );
-const Cell = dynamic(
+const Cell = dynamic2(
   () => import("recharts").then((m) => m.Cell),
   { ssr: false }
 );
 
-export default function PiePage() {
-  const router = useRouter();
+function PiePageInner() {
+  const [mounted, setMounted] = useState(false);
   const { charities, setCharities, initialCharities, monthlyGift } = useKindCurveStore();
   const [isCustom, setIsCustom] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (mounted && !charities.length) {
-      router.push("/onboarding/q1");
-    }
-  }, [mounted, charities.length, router]);
 
   const total = charities.reduce((s, c) => s + c.allocation, 0);
 
@@ -195,7 +189,11 @@ export default function PiePage() {
         ))}
       </Card>
 
-      <TealButton onClick={() => router.push("/consistency")}>Continue</TealButton>
+      <TealButton onClick={() => window.location.href = "/consistency"}>Continue</TealButton>
     </PageShell>
   );
+}
+
+export default function PiePage() {
+  return <PiePageInner />;
 }
