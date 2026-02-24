@@ -2,44 +2,16 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useKindCurveStore } from "@/lib/store";
 import { generateProjectionData } from "@/lib/impactProjection";
 import { BackButton, TealButton, SecondaryButton, Card, PageShell } from "@/components/ui/shared";
-
-const ResponsiveContainer = dynamic(
-  () => import("recharts").then((m) => m.ResponsiveContainer),
-  { ssr: false }
-);
-const LineChart = dynamic(
-  () => import("recharts").then((m) => m.LineChart),
-  { ssr: false }
-);
-const Line = dynamic(
-  () => import("recharts").then((m) => m.Line),
-  { ssr: false }
-);
-const XAxis = dynamic(
-  () => import("recharts").then((m) => m.XAxis),
-  { ssr: false }
-);
-const YAxis = dynamic(
-  () => import("recharts").then((m) => m.YAxis),
-  { ssr: false }
-);
-const CartesianGrid = dynamic(
-  () => import("recharts").then((m) => m.CartesianGrid),
-  { ssr: false }
-);
-const Tooltip = dynamic(
-  () => import("recharts").then((m) => m.Tooltip),
-  { ssr: false }
-);
 
 export default function ConsistencyPage() {
   const router = useRouter();
   const { monthlyGift } = useKindCurveStore();
   const data = useMemo(generateProjectionData, []);
+
   return (
     <PageShell>
       <BackButton href="/pie" />
@@ -92,4 +64,22 @@ export default function ConsistencyPage() {
         </p>
       </Card>
       <Card className="mb-2 !p-5">
-        <h4 className="text-kc-teal dark:text-kc-cyan text-[15px] font-semibold mb-1.5">Your impact compounds
+        <h4 className="text-kc-teal dark:text-kc-cyan text-[15px] font-semibold mb-1.5">Your impact compounds</h4>
+        <p className="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed">
+          Even if the total donated is the same, predictable support enables charities to multiply their effectiveness over time.
+        </p>
+      </Card>
+
+      <p className="text-center text-gray-400/60 dark:text-gray-600 text-[11px] my-5">
+        This projection is illustrative, demonstrating the compounding effect of predictable giving.
+      </p>
+
+      <TealButton onClick={() => router.push("/success")}>
+        Confirm and create my Kind Curve
+      </TealButton>
+      <SecondaryButton onClick={() => router.push("/pie")}>
+        Go back and tweak my mix
+      </SecondaryButton>
+    </PageShell>
+  );
+}

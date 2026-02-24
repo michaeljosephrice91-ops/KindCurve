@@ -9,20 +9,20 @@ import { useKindCurveStore } from "@/lib/store";
 import { PIE_COLORS } from "@/lib/constants";
 import { BackButton, TealButton, Card, PageShell } from "@/components/ui/shared";
 
-const ResponsiveContainer = dynamic2(
+const ResponsiveContainer: any = dynamic2(
   () => import("recharts").then((m) => m.ResponsiveContainer),
   { ssr: false }
 );
-const PieChart = dynamic2(
+const PieChart: any = dynamic2(
   () => import("recharts").then((m) => m.PieChart),
   { ssr: false }
 );
-const Pie = dynamic2(
-  () => import("recharts").then((m) => m.Pie),
+const Pie: any = dynamic2(
+  () => import("recharts").then((m) => m.Pie as any),
   { ssr: false }
 );
-const Cell = dynamic2(
-  () => import("recharts").then((m) => m.Cell),
+const Cell: any = dynamic2(
+  () => import("recharts").then((m) => m.Cell as any),
   { ssr: false }
 );
 
