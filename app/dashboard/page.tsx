@@ -3,25 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
 import { Heart, TrendingUp, Award, LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabaseClient";
 import { generateSparklineData } from "@/lib/impactProjection";
 import { KCLogo } from "@/components/KCLogo";
 import { TealButton, Card, PageShell } from "@/components/ui/shared";
 
-const ResponsiveContainer = dynamic(
-  () => import("recharts").then((m) => m.ResponsiveContainer),
-  { ssr: false }
-);
-const LineChart = dynamic(
-  () => import("recharts").then((m) => m.LineChart),
-  { ssr: false }
-);
-const Line = dynamic(
-  () => import("recharts").then((m) => m.Line),
-  { ssr: false }
-);
+import { ResponsiveContainer, LineChart, Line } from "recharts";
 
 const sparkData = generateSparklineData();
 
@@ -44,7 +32,9 @@ export default function DashboardPage() {
 
   const loadDashboard = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       router.push("/login");
@@ -107,9 +97,7 @@ export default function DashboardPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
             Create your first Kind Curve to see your dashboard.
           </p>
-          <TealButton onClick={handleNewCurve}>
-            Build your Kind Curve
-          </TealButton>
+          <TealButton onClick={handleNewCurve}>Build your Kind Curve</TealButton>
         </div>
       </PageShell>
     );
@@ -179,4 +167,40 @@ export default function DashboardPage() {
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
         <Card className="mb-4">
           <h3 className="text-[15px] font-semibold mb-3.5">Your charities</h3>
-          {allocations.ma
+          {allocations.length > 0 ? (
+            <div className="space-y-2.5">
+              {allocations.map((allocation) => (
+                <div key={allocation.id} className="flex items-center justify-between text-sm">
+                  <span className="font-medium">{allocation.charities?.name || "Unnamed charity"}</span>
+                  <span className="text-gray-500 dark:text-gray-400">{allocation.allocation_pct}%</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-500 dark:text-gray-400">No allocations yet.</p>
+          )}
+        </Card>
+      </motion.div>
+
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
+        <Card>
+          <h3 className="text-[15px] font-semibold mb-3.5">Recent impact activity</h3>
+          <div className="space-y-3">
+            {impactEvents.map((event) => {
+              const Icon = event.icon;
+              return (
+                <div key={event.text} className="flex items-start gap-2.5">
+                  <Icon size={16} style={{ color: event.color }} className="mt-0.5" />
+                  <div className="min-w-0">
+                    <p className="text-sm">{event.text}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{event.date}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      </motion.div>
+    </PageShell>
+  );
+}

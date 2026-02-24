@@ -3,28 +3,12 @@
 export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
-import dynamic2 from "next/dynamic";
 import { RotateCcw } from "lucide-react";
 import { useKindCurveStore } from "@/lib/store";
 import { PIE_COLORS } from "@/lib/constants";
 import { BackButton, TealButton, Card, PageShell } from "@/components/ui/shared";
 
-const ResponsiveContainer = dynamic2(
-  () => import("recharts").then((m) => m.ResponsiveContainer),
-  { ssr: false }
-);
-const PieChart = dynamic2(
-  () => import("recharts").then((m) => m.PieChart),
-  { ssr: false }
-);
-const Pie = dynamic2(
-  () => import("recharts").then((m) => m.Pie),
-  { ssr: false }
-);
-const Cell = dynamic2(
-  () => import("recharts").then((m) => m.Cell),
-  { ssr: false }
-);
+import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 function PiePageInner() {
   const [mounted, setMounted] = useState(false);

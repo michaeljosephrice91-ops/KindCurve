@@ -2,44 +2,17 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import { useKindCurveStore } from "@/lib/store";
 import { generateProjectionData } from "@/lib/impactProjection";
 import { BackButton, TealButton, SecondaryButton, Card, PageShell } from "@/components/ui/shared";
 
-const ResponsiveContainer = dynamic(
-  () => import("recharts").then((m) => m.ResponsiveContainer),
-  { ssr: false }
-);
-const LineChart = dynamic(
-  () => import("recharts").then((m) => m.LineChart),
-  { ssr: false }
-);
-const Line = dynamic(
-  () => import("recharts").then((m) => m.Line),
-  { ssr: false }
-);
-const XAxis = dynamic(
-  () => import("recharts").then((m) => m.XAxis),
-  { ssr: false }
-);
-const YAxis = dynamic(
-  () => import("recharts").then((m) => m.YAxis),
-  { ssr: false }
-);
-const CartesianGrid = dynamic(
-  () => import("recharts").then((m) => m.CartesianGrid),
-  { ssr: false }
-);
-const Tooltip = dynamic(
-  () => import("recharts").then((m) => m.Tooltip),
-  { ssr: false }
-);
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
 export default function ConsistencyPage() {
   const router = useRouter();
   const { monthlyGift } = useKindCurveStore();
   const data = useMemo(generateProjectionData, []);
+
   return (
     <PageShell>
       <BackButton href="/pie" />
@@ -64,10 +37,19 @@ export default function ConsistencyPage() {
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
-            <XAxis dataKey="year" className="text-[11px]" stroke="#9ca3af" tick={{ fontSize: 11, fill: "#9ca3af" }}
-              label={{ value: "Years", position: "insideBottom", offset: -4, fill: "#9ca3af", fontSize: 11 }} />
-            <YAxis className="text-[11px]" stroke="#9ca3af" tick={{ fontSize: 11, fill: "#9ca3af" }}
-              label={{ value: "Impact", angle: -90, position: "insideLeft", fill: "#9ca3af", fontSize: 11 }} />
+            <XAxis
+              dataKey="year"
+              className="text-[11px]"
+              stroke="#9ca3af"
+              tick={{ fontSize: 11, fill: "#9ca3af" }}
+              label={{ value: "Years", position: "insideBottom", offset: -4, fill: "#9ca3af", fontSize: 11 }}
+            />
+            <YAxis
+              className="text-[11px]"
+              stroke="#9ca3af"
+              tick={{ fontSize: 11, fill: "#9ca3af" }}
+              label={{ value: "Impact", angle: -90, position: "insideLeft", fill: "#9ca3af", fontSize: 11 }}
+            />
             <Tooltip contentStyle={{ borderRadius: 12, fontSize: 13 }} />
             <defs>
               <linearGradient id="kcGrad" x1="0" y1="0" x2="1" y2="0">
@@ -91,5 +73,22 @@ export default function ConsistencyPage() {
           Regular monthly giving allows charities to plan ahead, invest in long-term programs, and create sustainable impact.
         </p>
       </Card>
-      <Card className="mb-2 !p-5">
-        <h4 className="text-kc-teal dark:text-kc-cyan text-[15px] font-semibold mb-1.5">Your impact compounds
+
+      <Card className="mb-6 !p-5">
+        <h4 className="text-kc-teal dark:text-kc-cyan text-[15px] font-semibold mb-1.5">Your impact compounds</h4>
+        <p className="text-gray-500 dark:text-gray-400 text-[13px] leading-relaxed">
+          Even modest monthly gifts can produce meaningful cumulative outcomes over time.
+        </p>
+      </Card>
+
+      <div className="flex gap-2.5">
+        <div className="flex-1"><SecondaryButton onClick={() => router.push("/pie")}>
+          Back to allocation
+        </SecondaryButton></div>
+        <div className="flex-1"><TealButton onClick={() => router.push("/success")}>
+          Continue
+        </TealButton></div>
+      </div>
+    </PageShell>
+  );
+}
