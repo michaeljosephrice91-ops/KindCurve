@@ -9,11 +9,19 @@ const AUTH_ROUTES = ["/login", "/signup"];
 export async function middleware(req: NextRequest) {
   // Start with a passthrough response
   const res = NextResponse.next();
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // Supabase auth is optional for v1 deployments. If credentials are missing,
+  // skip auth checks so middleware never throws a 500.
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return res;
+  }
 
   // Create Supabase client configured for middleware cookie handling
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {
